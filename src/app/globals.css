@@ -7,6 +7,7 @@
   --brand: #c2ed3f;
   --brand-dark: #92c300;
   --brand-darker: #111811;
+  --brand-light: #8bad2433;
 }
 
 @theme inline {
