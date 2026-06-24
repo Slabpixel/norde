@@ -1,8 +1,11 @@
 "use client";
 
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ReactLenis, type LenisRef } from "lenis/react";
 import { useEffect, useRef, type ReactNode } from "react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 type SmoothScrollProps = {
   children: ReactNode;
@@ -14,6 +17,7 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
   useEffect(() => {
     function update(time: number) {
       lenisRef.current?.lenis?.raf(time * 1000);
+      ScrollTrigger.update();
     }
 
     gsap.ticker.add(update);

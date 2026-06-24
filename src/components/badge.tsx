@@ -28,7 +28,7 @@ export default function Badge({
         <Image src={icon} alt="" width={16} height={16} />
         <span
           className={cn(
-            "text-center leading-none",
+            "text-center text-sm md:text-base leading-none",
             variant === "dark" ? "text-background" : "text-foreground",
           )}
         >
