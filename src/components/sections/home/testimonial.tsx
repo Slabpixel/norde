@@ -1,10 +1,10 @@
 "use client";
 
 import Badge from "@/components/badge";
-import gsap from "gsap";
+import { useSmooothy } from "@/hooks/use-smooothy";
+import { ParallaxSpeedSlider } from "@/lib/parallax-speed-slider";
 import Image from "next/image";
-import { useEffect, useRef } from "react";
-import Core from "smooothy";
+import { useMemo } from "react";
 
 const TESTIMONIALS = [
   {
@@ -42,25 +42,15 @@ const TESTIMONIALS = [
 ] as const;
 
 export default function Testimonial() {
-  const sliderRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const wrapper = sliderRef.current;
-    if (!wrapper) return;
-
-    const slider = new Core(wrapper, {
+  const sliderConfig = useMemo(
+    () => ({
       infinite: true,
       snap: true,
-    });
+    }),
+    [],
+  );
 
-    const update = () => slider.update();
-    gsap.ticker.add(update);
-
-    return () => {
-      gsap.ticker.remove(update);
-      slider.destroy();
-    };
-  }, []);
+  const { ref } = useSmooothy(sliderConfig, ParallaxSpeedSlider);
 
   return (
     <section className="w-full overflow-hidden bg-white pb-15 pt-30">
@@ -71,46 +61,45 @@ export default function Testimonial() {
             Sustainable Pricing That Grows With You
           </h2>
         </div>
+      </div>
 
-        <div className="mt-20 overflow-hidden">
+      <div
+        ref={ref}
+        className="mt-20 flex w-screen cursor-grab overflow-x-hidden px-[calc(50%-42.5vw)] focus:outline-none active:cursor-grabbing md:px-[calc(50%-220px)]"
+      >
+        {TESTIMONIALS.map((item) => (
           <div
-            ref={sliderRef}
-            data-slider
-            className="flex cursor-grab overflow-x-hidden active:cursor-grabbing"
+            key={item.name}
+            className="w-[85vw] shrink-0 h-full pr-5 md:w-[440px]"
           >
-            {TESTIMONIALS.map((item) => (
-              <article
-                key={item.name}
-                className="flex w-[440px] shrink-0 flex-col justify-between pr-5"
-              >
-                <div className="flex min-h-[414px] flex-col justify-between rounded-2xl border border-black/5 p-6">
+            <div data-p className="w-full h-full">
+              <article className="flex h-full w-full flex-col justify-between rounded-2xl border border-black/5 p-6">
+                <div className="flex-1">
+                  <p className="text-5xl leading-none text-brand">&ldquo;</p>
+                  <p className="mt-6 text-2xl leading-[1.2]">{item.quote}</p>
+                </div>
+                <div className="mt-8 flex shrink-0 items-center justify-between border-t border-black/5 pt-6">
                   <div>
-                    <p className="text-5xl leading-none text-brand">&ldquo;</p>
-                    <p className="mt-6 text-[2rem] leading-[1.2]">{item.quote}</p>
+                    <p className="text-base font-medium">{item.name}</p>
+                    <p className="mt-1 text-sm italic text-foreground/60">
+                      {item.title}
+                    </p>
                   </div>
-                  <div className="mt-8 flex items-center justify-between border-t border-black/5 pt-6">
-                    <div>
-                      <p className="text-base font-medium">{item.name}</p>
-                      <p className="mt-1 text-sm italic text-foreground/60">
-                        {item.title}
-                      </p>
-                    </div>
-                    <div className="relative size-12 overflow-hidden rounded-lg bg-black/10">
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        fill
-                        className="object-cover"
-                        sizes="48px"
-                        unoptimized
-                      />
-                    </div>
+                  <div className="relative size-12 overflow-hidden rounded-lg bg-black/10">
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      className="object-cover"
+                      sizes="48px"
+                      unoptimized
+                    />
                   </div>
                 </div>
               </article>
-            ))}
+            </div>
           </div>
-        </div>
+        ))}
       </div>
     </section>
   );
