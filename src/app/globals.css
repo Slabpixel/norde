@@ -37,3 +37,8 @@ h5,
 h6 {
   font-family: var(--font-plus-jakarta-sans), sans-serif;
 }
+
+.btn-char {
+  display: inline-block;
+  will-change: transform;
+}

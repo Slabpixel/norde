@@ -10,7 +10,9 @@ export class ParallaxSpeedSlider extends Core {
       speedDecay: 0.9,
     });
 
-    this.parallaxElements = [...wrapper.querySelectorAll<HTMLElement>("[data-p]")];
+    this.parallaxElements = [
+      ...wrapper.querySelectorAll<HTMLElement>("[data-p]"),
+    ];
   }
 
   onUpdate = ({ parallaxValues, speed, deltaTime }: Core) => {

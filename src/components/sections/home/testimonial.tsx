@@ -53,11 +53,11 @@ export default function Testimonial() {
   const { ref } = useSmooothy(sliderConfig, ParallaxSpeedSlider);
 
   return (
-    <section className="w-full overflow-hidden bg-white pb-15 pt-30">
-      <div className="mx-auto max-w-8xl px-4 sm:px-6 md:px-8 lg:px-10">
-        <div className="mx-auto flex max-w-[35.25rem] flex-col items-center gap-2 text-center">
+    <section className="w-full overflow-hidden bg-white pt-30 pb-15">
+      <div className="max-w-8xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
+        <div className="mx-auto flex max-w-141 flex-col items-center gap-2 text-center">
           <Badge text="Testimonials" />
-          <h2 className="bg-linear-to-t from-brand-darker/10 to-brand-darker bg-clip-text text-6xl leading-[1.2] text-transparent">
+          <h2 className="from-brand-darker/10 to-brand-darker bg-linear-to-t bg-clip-text text-5xl leading-[1.2] text-transparent">
             Sustainable Pricing That Grows With You
           </h2>
         </div>
@@ -70,18 +70,18 @@ export default function Testimonial() {
         {TESTIMONIALS.map((item) => (
           <div
             key={item.name}
-            className="w-[85vw] shrink-0 h-full pr-5 md:w-[440px]"
+            className="h-full w-[85vw] shrink-0 pr-5 md:w-[440px]"
           >
-            <div data-p className="w-full h-full">
+            <div data-p className="h-full w-full">
               <article className="flex h-full w-full flex-col justify-between rounded-2xl border border-black/5 p-6">
                 <div className="flex-1">
-                  <p className="text-5xl leading-none text-brand">&ldquo;</p>
+                  <p className="text-brand text-5xl leading-none">&ldquo;</p>
                   <p className="mt-6 text-2xl leading-[1.2]">{item.quote}</p>
                 </div>
                 <div className="mt-8 flex shrink-0 items-center justify-between border-t border-black/5 pt-6">
                   <div>
                     <p className="text-base font-medium">{item.name}</p>
-                    <p className="mt-1 text-sm italic text-foreground/60">
+                    <p className="text-foreground/60 mt-1 text-sm italic">
                       {item.title}
                     </p>
                   </div>
