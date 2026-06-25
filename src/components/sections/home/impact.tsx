@@ -135,10 +135,10 @@ export default function Impact() {
               />
               <div className="flex flex-col gap-3">
                 <h3 className="font-body text-base leading-[1.2] md:text-xl lg:text-2xl">
-                  Energy reduction per inference
+                  Operational consistency
                 </h3>
                 <p className="text-foreground/70 text-sm leading-[1.2]">
-                  Compared to conventional large-scale models.
+                  Adaptive learning without performance spikes.
                 </p>
               </div>
             </div>
@@ -156,10 +156,10 @@ export default function Impact() {
               />
               <div className="flex flex-col gap-3">
                 <h3 className="font-body text-base leading-[1.2] md:text-xl lg:text-2xl">
-                  Energy reduction per inference
+                  Less redundant data processing
                 </h3>
                 <p className="text-foreground/70 text-sm leading-[1.2]">
-                  Compared to conventional large-scale models.
+                  Signals filtered before full computation.
                 </p>
               </div>
             </div>
@@ -167,14 +167,14 @@ export default function Impact() {
               <AnimatedStat
                 to={3}
                 className={statNumberClass}
-                suffix={<span className="text-brand-dark">x</span>}
+                suffix={<span className="text-brand-dark">×</span>}
               />
               <div className="flex flex-col gap-3">
                 <h3 className="font-body text-base leading-[1.2] md:text-xl lg:text-2xl">
-                  Energy reduction per inference
+                  Longer system stability window
                 </h3>
                 <p className="text-foreground/70 text-sm leading-[1.2]">
-                  Compared to conventional large-scale models.
+                  Maintains performance without scaling hardware.
                 </p>
               </div>
             </div>
