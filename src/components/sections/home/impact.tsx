@@ -84,7 +84,10 @@ export default function Impact() {
   useSectionReveal(sectionRef);
 
   return (
-    <section ref={sectionRef} className="relative w-full overflow-hidden py-30">
+    <section
+      ref={sectionRef}
+      className="bg-background relative z-10 w-full overflow-hidden py-30"
+    >
       <div className="max-w-8xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
         <div className="flex h-full w-full flex-col items-center justify-center gap-20">
           <RevealGroup className="flex flex-col items-center justify-center gap-2 text-center">

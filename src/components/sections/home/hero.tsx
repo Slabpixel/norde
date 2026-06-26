@@ -8,15 +8,28 @@ import { useSectionReveal } from "@/hooks/use-section-reveal";
 import Image from "next/image";
 import { useRef } from "react";
 
+const HERO_CONTENT_PARALLAX = {
+  from: { y: 0 },
+  to: { yPercent:8 },
+  start: "top top-=20%",
+  end: "bottom top",
+} as const;
+
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useParallax(bgRef, {
     triggerRef: sectionRef,
     yPercent: 22,
     start: "top top",
     end: "bottom top",
+  });
+
+  useParallax(contentRef, {
+    triggerRef: sectionRef,
+    ...HERO_CONTENT_PARALLAX,
   });
 
   useSectionReveal(sectionRef, { start: "top 100%" });
@@ -39,7 +52,10 @@ export default function Hero() {
 
       <div className="bg-background absolute -bottom-25 -left-20 h-46 w-[calc(100%+10rem)] blur-2xl"></div>
 
-      <div className="relative mx-auto h-full px-4 sm:px-6 md:px-8 lg:px-10">
+      <div
+        ref={contentRef}
+        className="relative mx-auto h-full px-4 sm:px-6 md:px-8 lg:px-10"
+      >
         <div className="flex h-full flex-col items-center gap-8 md:gap-13.5">
           <RevealGroup className="flex flex-col items-center justify-center gap-4 md:gap-6">
             <RevealItem>

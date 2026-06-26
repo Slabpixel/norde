@@ -7,9 +7,13 @@ import { scheduleScrollTriggerSetup } from "@/lib/schedule-scroll-trigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+type ParallaxVars = gsap.TweenVars;
+
 type UseParallaxOptions = {
   triggerRef?: RefObject<HTMLElement | null>;
   yPercent?: number;
+  from?: ParallaxVars;
+  to?: ParallaxVars;
   scrub?: number | boolean;
   start?: string;
   end?: string;
@@ -21,6 +25,8 @@ export function useParallax(
   {
     triggerRef,
     yPercent = 18,
+    from,
+    to,
     scrub = true,
     start = "top bottom",
     end = "bottom top",
@@ -44,9 +50,9 @@ export function useParallax(
       return gsap.context(() => {
         gsap.fromTo(
           target,
-          { yPercent: -yPercent / 2 },
+          from ?? { yPercent: -yPercent / 2 },
           {
-            yPercent: yPercent / 2,
+            ...(to ?? { yPercent: yPercent / 2 }),
             ease: "none",
             scrollTrigger: {
               trigger,
@@ -59,5 +65,5 @@ export function useParallax(
         );
       }, trigger);
     });
-  }, [targetRef, triggerRef, yPercent, scrub, start, end, disabled]);
+  }, [targetRef, triggerRef, yPercent, from, to, scrub, start, end, disabled]);
 }
