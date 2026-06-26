@@ -2,6 +2,8 @@
 
 import Badge from "@/components/badge";
 import Button from "@/components/button";
+import { RevealFade, RevealGroup, RevealItem, RevealSplit } from "@/components/scroll-reveal";
+import { useSectionReveal } from "@/hooks/use-section-reveal";
 import { cn } from "@/lib/utils";
 import gsap from "gsap";
 import Image from "next/image";
@@ -275,26 +277,37 @@ function MobilePricingCard({
 }
 
 export default function Pricing() {
+  const sectionRef = useRef<HTMLElement>(null);
   const [billing, setBilling] = useState<BillingPeriod>("monthly");
   const [selectedPlan, setSelectedPlan] = useState<string>("grow");
 
+  useSectionReveal(sectionRef);
+
   return (
-    <section className="w-full overflow-hidden bg-[#fafafa] py-15 md:py-30">
+    <section
+      ref={sectionRef}
+      className="w-full overflow-hidden bg-[#fafafa] py-15 md:py-30"
+    >
       <div className="mx-auto max-w-8xl px-4 sm:px-6 md:px-8 lg:px-10">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <RevealGroup className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="max-w-135">
-            <Badge text="Pricing" />
-            <h2 className="from-brand-darker/10 to-brand-darker mt-2 bg-linear-to-t bg-clip-text text-[2rem] leading-[1.2] text-transparent md:text-5xl">
+            <RevealItem>
+              <Badge text="Pricing" />
+            </RevealItem>
+            <RevealFade
+              as="h2"
+              className="from-brand-darker/10 to-brand-darker mt-2 bg-linear-to-t bg-clip-text text-[2rem] leading-[1.2] text-transparent md:text-5xl"
+            >
               Sustainable Pricing That Grows With You
-            </h2>
+            </RevealFade>
           </div>
-          <p className="text-foreground/70 text-sm leading-[1.4] md:mb-2 md:w-85">
+          <RevealSplit className="text-foreground/70 text-sm leading-[1.4] md:mb-2 md:w-85">
             From data usage to model updates, every layer is designed to sustain
             performance over time — without increasing environmental cost.
-          </p>
-        </div>
+          </RevealSplit>
+        </RevealGroup>
 
-        <div className="mt-6 flex items-center justify-between md:mt-12 md:justify-center">
+        <RevealItem className="mt-6 flex items-center justify-between md:mt-12 md:justify-center">
           <p className="text-lg text-black md:hidden">Select Plan</p>
           <div className="flex items-center rounded-full bg-black/2 p-1.5">
             <Button
@@ -314,19 +327,20 @@ export default function Pricing() {
               Annually
             </Button>
           </div>
-        </div>
+        </RevealItem>
 
         <div className="mt-6 flex flex-col gap-4 md:hidden">
           {PLANS.map((plan) => {
             const price = billing === "monthly" ? plan.monthly : plan.annual;
             return (
-              <MobilePricingCard
-                key={plan.id}
-                plan={plan}
-                price={price}
-                selected={selectedPlan === plan.id}
-                onSelect={() => setSelectedPlan(plan.id)}
-              />
+              <RevealItem key={plan.id}>
+                <MobilePricingCard
+                  plan={plan}
+                  price={price}
+                  selected={selectedPlan === plan.id}
+                  onSelect={() => setSelectedPlan(plan.id)}
+                />
+              </RevealItem>
             );
           })}
         </div>
@@ -355,7 +369,8 @@ export default function Pricing() {
 
             if (plan.featured) {
               return (
-                <article key={plan.id} className="relative rounded-2xl">
+                <RevealItem key={plan.id}>
+                  <article className="relative rounded-2xl">
                   <div className="relative z-1 overflow-hidden rounded-2xl border border-black/5 bg-white/95 px-6 py-8">
                     <Image
                       src="/gradient-pricing-bg.svg"
@@ -370,17 +385,19 @@ export default function Pricing() {
                       {plan.badge}
                     </div>
                   )}
-                </article>
+                  </article>
+                </RevealItem>
               );
             }
 
             return (
-              <article
-                key={plan.id}
-                className="rounded-2xl border border-black/5 bg-white px-6 py-8"
-              >
-                {cardContent}
-              </article>
+              <RevealItem key={plan.id}>
+                <article
+                  className="rounded-2xl border border-black/5 bg-white px-6 py-8"
+                >
+                  {cardContent}
+                </article>
+              </RevealItem>
             );
           })}
         </div>

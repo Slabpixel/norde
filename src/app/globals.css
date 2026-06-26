@@ -42,3 +42,8 @@ h6 {
   display: inline-block;
   will-change: transform;
 }
+
+.reveal-line {
+  display: block;
+  will-change: transform;
+}

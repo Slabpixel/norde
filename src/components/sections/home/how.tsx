@@ -2,6 +2,9 @@
 
 import Badge from "@/components/badge";
 import Button from "@/components/button";
+import { RevealFade, RevealGroup, RevealItem, RevealSplit } from "@/components/scroll-reveal";
+import { useParallax } from "@/hooks/use-parallax";
+import { useSectionReveal } from "@/hooks/use-section-reveal";
 import { cn } from "@/lib/utils";
 import { useLenis } from "lenis/react";
 import Image from "next/image";
@@ -61,41 +64,76 @@ function HowItemContent({
   activeIndex: number;
   itemRef?: (el: HTMLElement | null) => void;
 }) {
+  const imageContainerRef = useRef<HTMLDivElement>(null);
+  const imageLayerRef = useRef<HTMLDivElement>(null);
+  const overlayARef = useRef<HTMLDivElement>(null);
+  const overlayBRef = useRef<HTMLDivElement>(null);
+
+  useParallax(imageLayerRef, {
+    triggerRef: imageContainerRef,
+    yPercent: 50,
+  });
+
+  useParallax(overlayARef, {
+    triggerRef: imageContainerRef,
+    yPercent: 22,
+    disabled: !item.overlays,
+  });
+
+  useParallax(overlayBRef, {
+    triggerRef: imageContainerRef,
+    yPercent: 10,
+    disabled: !item.overlays,
+  });
+
   return (
     <article
       ref={itemRef}
       className={cn(
         "flex flex-col justify-start gap-6 transition-opacity duration-500 md:gap-8",
-        activeIndex === index ? "opacity-100" : "opacity-60",
+        activeIndex === index ? "opacity-100" : "opacity-80",
       )}
     >
       <div className="rounded-2xl bg-black/2 p-2 md:p-3.5">
-        <div className="relative h-[400px] overflow-hidden rounded-[10px] md:h-[460px] md:rounded-2xl">
-          <Image
-            src={item.image}
-            alt=""
-            fill
-            className="object-cover object-bottom"
-            sizes="(max-width: 1280px) 100vw, 920px"
-            priority={index <= 1}
-          />
+        <div
+          ref={imageContainerRef}
+          className="relative h-[400px] overflow-hidden rounded-[10px] md:h-[460px] md:rounded-2xl"
+        >
+          <div ref={imageLayerRef} className="absolute top-[-10%] h-[120%] w-full">
+            <Image
+              src={item.image}
+              alt=""
+              fill
+              className="object-cover object-bottom"
+              sizes="(max-width: 1280px) 100vw, 920px"
+              priority={index <= 1}
+            />
+          </div>
 
           {item.overlays && (
             <>
-              <Image
-                src="/how-1-a.png"
-                alt=""
-                width={480}
-                height={520}
-                className="pointer-events-none absolute top-1/2 left-[22%] w-[52%] max-w-[480px] -translate-y-1/2"
-              />
-              <Image
-                src="/how-1-b.png"
-                alt=""
-                width={236}
-                height={280}
-                className="pointer-events-none absolute top-[12%] right-[5%] w-[27%] max-w-[236px]"
-              />
+              <div className="pointer-events-none absolute top-1/2 left-[20%] w-[52%] max-w-[480px] -translate-y-1/2">
+                <div ref={overlayARef} className="will-change-transform">
+                  <Image
+                    src="/how-1-a.svg"
+                    alt=""
+                    width={480}
+                    height={520}
+                    className="h-auto w-full"
+                  />
+                </div>
+              </div>
+              <div className="pointer-events-none absolute top-[1%] right-[1%] w-[45%] max-w-[375px]">
+                <div ref={overlayBRef} className="will-change-transform">
+                  <Image
+                    src="/how-1-b.svg"
+                    alt=""
+                    width={375}
+                    height={372}
+                    className="h-auto w-full"
+                  />
+                </div>
+              </div>
             </>
           )}
         </div>
@@ -113,8 +151,11 @@ function HowItemContent({
 
 export default function How() {
   const lenis = useLenis();
+  const headerRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const itemRefs = useRef<(HTMLElement | null)[]>([]);
+
+  useSectionReveal(headerRef);
 
   useEffect(() => {
     const updateActive = () => {
@@ -162,19 +203,27 @@ export default function How() {
   return (
     <section className="relative w-full overflow-x-clip bg-white py-15 md:py-30">
       <div className="mx-auto max-w-8xl space-y-6 px-4 sm:px-6 md:space-y-12 md:px-8 lg:px-10">
-        <div className="flex flex-col gap-4 md:grid md:grid-cols-12 md:items-center">
-          <p className="text-foreground/70 order-2 text-sm leading-[1.4] md:order-1 md:col-span-4 md:w-71 md:shrink-0">
+        <RevealGroup
+          ref={headerRef}
+          className="flex flex-col gap-4 md:grid md:grid-cols-12 md:items-center"
+        >
+          <RevealSplit className="text-foreground/70 order-2 text-sm leading-[1.4] md:order-1 md:col-span-4 md:w-71 md:shrink-0">
             Norde processes information like natural systems selectively and
             adaptively, with minimal energy waste. Each layer filters noise and
             refines signals.
-          </p>
+          </RevealSplit>
           <div className="order-1 flex flex-col gap-4 md:order-2 md:col-span-8 md:max-w-[34.7rem]">
-            <Badge text="How it Work" />
-            <h2 className="from-brand-darker/10 to-brand-darker bg-linear-to-t bg-clip-text text-[2rem] leading-[1.2] text-transparent md:text-5xl">
+            <RevealItem>
+              <Badge text="How it Work" />
+            </RevealItem>
+            <RevealFade
+              as="h2"
+              className="from-brand-darker/10 to-brand-darker bg-linear-to-t bg-clip-text text-[2rem] leading-[1.2] text-transparent md:text-5xl"
+            >
               An adaptive intelligence modeled after living ecosystems.
-            </h2>
+            </RevealFade>
           </div>
-        </div>
+        </RevealGroup>
 
         <div className="border-b border-black/5 md:hidden">
           <div className="-mx-4 flex overflow-x-auto px-4 scrollbar-none [&::-webkit-scrollbar]:hidden">

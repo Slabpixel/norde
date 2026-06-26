@@ -1,10 +1,13 @@
 "use client";
 
 import Badge from "@/components/badge";
+import { RevealFade, RevealGroup, RevealItem, RevealSplit } from "@/components/scroll-reveal";
+import { useSectionReveal } from "@/hooks/use-section-reveal";
+import { scheduleScrollTriggerSetup } from "@/lib/schedule-scroll-trigger";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import { useEffect, useRef, type ReactNode } from "react";
+import { useLayoutEffect, useRef, type ReactNode } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,36 +26,48 @@ function AnimatedStat({
   const rootRef = useRef<HTMLDivElement>(null);
   const numberRef = useRef<HTMLSpanElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = rootRef.current;
     const numberEl = numberRef.current;
     if (!root || !numberEl) return;
 
-    numberEl.textContent = "0";
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
 
-    const ctx = gsap.context(() => {
-      const proxy = { val: 0 };
+    if (reducedMotion) {
+      numberEl.textContent = String(to);
+      return;
+    }
 
-      gsap.to(proxy, {
-        val: to,
-        duration: 1.2,
-        ease: "power2.out",
-        snap: { val: 1 },
-        scrollTrigger: {
-          trigger: root,
-          start: "top 85%",
-          once: true,
-        },
-        onUpdate: () => {
-          numberEl.textContent = String(Math.round(proxy.val));
-        },
-        onComplete: () => {
-          numberEl.textContent = String(to);
-        },
-      });
-    }, root);
+    return scheduleScrollTriggerSetup(() => {
+      if (!root.isConnected || !numberEl.isConnected) return null;
 
-    return () => ctx.revert();
+      numberEl.textContent = "0";
+
+      return gsap.context(() => {
+        const proxy = { val: 0 };
+
+        gsap.to(proxy, {
+          val: to,
+          duration: 1.2,
+          ease: "power2.out",
+          snap: { val: 1 },
+          scrollTrigger: {
+            trigger: root,
+            start: "top 85%",
+            once: true,
+            invalidateOnRefresh: true,
+          },
+          onUpdate: () => {
+            numberEl.textContent = String(Math.round(proxy.val));
+          },
+          onComplete: () => {
+            numberEl.textContent = String(to);
+          },
+        });
+      }, root);
+    });
   }, [to]);
 
   return (
@@ -64,23 +79,32 @@ function AnimatedStat({
 }
 
 export default function Impact() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useSectionReveal(sectionRef);
+
   return (
-    <section className="relative w-full overflow-hidden py-30">
+    <section ref={sectionRef} className="relative w-full overflow-hidden py-30">
       <div className="max-w-8xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
         <div className="flex h-full w-full flex-col items-center justify-center gap-20">
-          <div className="flex flex-col items-center justify-center gap-2 text-center">
-            <Badge text="Measured Impact" />
-            <h2 className="from-brand-darker to-brand-darker/10 max-w-[16em] bg-linear-to-b bg-clip-text text-[2rem] leading-[1.2] text-transparent md:text-5xl">
+          <RevealGroup className="flex flex-col items-center justify-center gap-2 text-center">
+            <RevealItem>
+              <Badge text="Measured Impact" />
+            </RevealItem>
+            <RevealFade
+              as="h2"
+              className="from-brand-darker to-brand-darker/10 max-w-[16em] bg-linear-to-b bg-clip-text text-[2rem] leading-[1.2] text-transparent md:text-5xl"
+            >
               Performance proven through efficiency, not excess.
-            </h2>
-            <p className="text-foreground/70 mt-4 max-w-[36em] text-sm leading-[1.4]">
+            </RevealFade>
+            <RevealSplit className="text-foreground/70 mt-4 max-w-[36em] text-sm leading-[1.4]">
               From data usage to model updates, every layer is designed to
               sustain performance over time — without increasing environmental
               cost.
-            </p>
-          </div>
+            </RevealSplit>
+          </RevealGroup>
           <div className="grid w-full grid-cols-3 grid-rows-3 gap-5 max-md:grid-cols-2 max-md:gap-4">
-            <div className="font-heading relative flex min-h-60 flex-col justify-between gap-4 rounded-2xl border border-black/2 bg-black/2 p-4 md:min-h-64 md:p-5">
+            <RevealItem className="font-heading relative flex min-h-60 flex-col justify-between gap-4 rounded-2xl border border-black/2 bg-black/2 p-4 md:min-h-64 md:p-5">
               <AnimatedStat
                 to={38}
                 className={statNumberClass}
@@ -94,8 +118,8 @@ export default function Impact() {
                   Compared to conventional large-scale models.
                 </p>
               </div>
-            </div>
-            <div
+            </RevealItem>
+            <RevealItem
               style={{
                 background:
                   "linear-gradient(154deg, #C2ED3F -125.2%, #000 83.49%)",
@@ -126,8 +150,8 @@ export default function Impact() {
                   minimal footprint while ensuring efficiency and performance.
                 </p>
               </div>
-            </div>
-            <div className="font-heading relative flex min-h-60 flex-col justify-between gap-4 rounded-2xl border border-black/2 bg-black/2 p-4 md:row-span-2 md:min-h-64 md:p-5">
+            </RevealItem>
+            <RevealItem className="font-heading relative flex min-h-60 flex-col justify-between gap-4 rounded-2xl border border-black/2 bg-black/2 p-4 md:row-span-2 md:min-h-64 md:p-5">
               <AnimatedStat
                 to={92}
                 className={statNumberClass}
@@ -141,8 +165,8 @@ export default function Impact() {
                   Adaptive learning without performance spikes.
                 </p>
               </div>
-            </div>
-            <div className="font-heading relative flex min-h-60 flex-col justify-between gap-4 rounded-2xl border border-black/2 bg-black/2 p-4 md:row-span-2 md:min-h-64 md:p-5">
+            </RevealItem>
+            <RevealItem className="font-heading relative flex min-h-60 flex-col justify-between gap-4 rounded-2xl border border-black/2 bg-black/2 p-4 md:row-span-2 md:min-h-64 md:p-5">
               <Image
                 src="/gradient-card-bg.svg"
                 alt=""
@@ -162,8 +186,8 @@ export default function Impact() {
                   Signals filtered before full computation.
                 </p>
               </div>
-            </div>
-            <div className="font-heading relative flex min-h-60 flex-col justify-between gap-4 rounded-2xl border border-black/2 bg-black/2 p-4 md:min-h-64 md:p-5">
+            </RevealItem>
+            <RevealItem className="font-heading relative flex min-h-60 flex-col justify-between gap-4 rounded-2xl border border-black/2 bg-black/2 p-4 md:min-h-64 md:p-5">
               <AnimatedStat
                 to={3}
                 className={statNumberClass}
@@ -177,7 +201,7 @@ export default function Impact() {
                   Maintains performance without scaling hardware.
                 </p>
               </div>
-            </div>
+            </RevealItem>
           </div>
         </div>
       </div>

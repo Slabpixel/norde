@@ -1,5 +1,11 @@
+"use client";
+
 import Badge from "@/components/badge";
+import { RevealFade, RevealGroup, RevealItem } from "@/components/scroll-reveal";
+import { useParallax } from "@/hooks/use-parallax";
+import { useSectionReveal } from "@/hooks/use-section-reveal";
 import Image from "next/image";
+import { useRef } from "react";
 
 const CARD_STYLE = {
   background:
@@ -74,32 +80,63 @@ function WhyCard({
 }
 
 export default function Why() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
+
+  useParallax(bgRef, {
+    triggerRef: sectionRef,
+    yPercent: 40,
+  });
+
+  useSectionReveal(sectionRef);
+
   return (
-    <section className="bg-foreground text-background relative w-full overflow-hidden py-75">
-      <Image
-        fill
-        src="/why-bg.png"
-        alt=""
-        className="object-cover object-bottom"
-      />
+    <section
+      ref={sectionRef}
+      className="bg-foreground text-background relative w-full overflow-hidden py-75"
+    >
+      <div className="absolute inset-0 overflow-hidden">
+        <div ref={bgRef} className="absolute top-[-12%] h-[120%] w-full">
+          <Image
+            fill
+            src="/why-bg.png"
+            alt=""
+            className="object-cover object-bottom"
+          />
+        </div>
+      </div>
 
       <div className="bg-background absolute -bottom-25 -left-20 h-46 w-[calc(100%+10rem)] blur-2xl" />
       <div className="bg-background absolute -top-25 -left-20 h-46 w-[calc(100%+10rem)] blur-2xl" />
 
-      <div className="max-w-8xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
+      <div className="max-w-8xl relative mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
         <div className="grid h-full w-full grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
-          <div className="flex flex-col gap-4 max-md:mb-11 md:gap-6">
-            <Badge text="Why Choose norde" variant="dark" />
-            <h2 className="max-w-[16em] bg-linear-[47deg,rgba(255,255,255,0)_22.139%,#FFF_59.981%] bg-clip-text text-[2rem] leading-[1.1] text-transparent md:text-5xl">
+          <RevealGroup className="flex flex-col gap-4 max-md:mb-11 md:gap-6">
+            <RevealItem>
+              <Badge text="Why Choose norde" variant="dark" />
+            </RevealItem>
+            <RevealFade
+              as="h2"
+              className="max-w-[16em] bg-linear-[47deg,rgba(255,255,255,0)_-22.139%,#FFF_59.981%] bg-clip-text text-[2rem] leading-[1.1] text-transparent md:text-5xl"
+            >
               Intelligence that adapts & evolves responsibly.
-            </h2>
-          </div>
+            </RevealFade>
+          </RevealGroup>
 
-          <WhyCard {...WHY_CARDS[0]} />
-          <WhyCard {...WHY_CARDS[1]} />
-          <WhyCard {...WHY_CARDS[2]} />
+          <RevealItem>
+            <WhyCard {...WHY_CARDS[0]} />
+          </RevealItem>
+          <RevealItem>
+            <WhyCard {...WHY_CARDS[1]} />
+          </RevealItem>
+          <RevealItem>
+            <WhyCard {...WHY_CARDS[2]} />
+          </RevealItem>
 
-          <div className="flex items-center justify-center px-3.5 text-center max-md:row-start-6 max-md:mt-11">
+          <RevealFade
+            as="div"
+            className="flex items-center justify-center px-3.5 text-center max-md:row-start-6 max-md:mt-11"
+          >
             <p className="max-w-83 text-sm opacity-80">
               <span className="font-bold">
                 From data usage to model updates
@@ -107,9 +144,11 @@ export default function Why() {
               , every layer is designed to sustain performance over time —
               without increasing environmental cost.
             </p>
-          </div>
+          </RevealFade>
 
-          <WhyCard {...WHY_CARDS[3]} />
+          <RevealItem>
+            <WhyCard {...WHY_CARDS[3]} />
+          </RevealItem>
         </div>
       </div>
     </section>

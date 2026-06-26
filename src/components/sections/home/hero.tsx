@@ -1,33 +1,61 @@
-import Image from "next/image";
+"use client";
+
 import Badge from "@/components/badge";
 import Button from "@/components/button";
+import { RevealFade, RevealGroup, RevealItem } from "@/components/scroll-reveal";
+import { useParallax } from "@/hooks/use-parallax";
+import { useSectionReveal } from "@/hooks/use-section-reveal";
+import Image from "next/image";
+import { useRef } from "react";
 
 export default function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
+
+  useParallax(bgRef, {
+    triggerRef: sectionRef,
+    yPercent: 22,
+    start: "top top",
+    end: "bottom top",
+  });
+
+  useSectionReveal(sectionRef, { start: "top 100%" });
+
   return (
-    <section className="relative h-dvh min-h-338 w-full overflow-hidden py-33 md:py-45">
-      <div className="absolute inset-0 max-md:-top-3/4">
-        <Image
-          src="/hero-bg.png"
-          alt="Background"
-          fill
-          className="object-cover object-center"
-        />
+    <section
+      ref={sectionRef}
+      className="relative h-dvh min-h-338 w-full overflow-hidden py-33 md:py-45"
+    >
+      <div className="absolute inset-0 overflow-hidden max-md:-top-3/4">
+        <div ref={bgRef} className="absolute top-[-12%] h-[124%] w-full">
+          <Image
+            src="/hero-bg.png"
+            alt="Background"
+            fill
+            className="object-cover object-center"
+          />
+        </div>
       </div>
 
       <div className="bg-background absolute -bottom-25 -left-20 h-46 w-[calc(100%+10rem)] blur-2xl"></div>
 
       <div className="relative mx-auto h-full px-4 sm:px-6 md:px-8 lg:px-10">
         <div className="flex h-full flex-col items-center gap-8 md:gap-13.5">
-          <div className="flex flex-col items-center justify-center gap-4 md:gap-6">
-            <Badge />
-            <h1 className="from-brand-darker to-brand-darker/10 max-w-[8em] bg-linear-to-b bg-clip-text text-center text-[clamp(3.75rem,8vw,7.5rem)] leading-[0.95] text-transparent">
+          <RevealGroup className="flex flex-col items-center justify-center gap-4 md:gap-6">
+            <RevealItem>
+              <Badge />
+            </RevealItem>
+            <RevealFade
+              as="h1"
+              className="from-brand-darker to-brand-darker/10 max-w-[8em] bg-linear-to-b bg-clip-text text-center text-[clamp(3.75rem,8vw,7.5rem)] leading-[0.95] text-transparent"
+            >
               Intelligence doesn’t have to{" "}
               <span className="font-serif tracking-[-0.04em] italic">
                 be loud
               </span>
-            </h1>
-          </div>
-          <div className="flex flex-col items-center gap-1.5 sm:flex-row sm:gap-4">
+            </RevealFade>
+          </RevealGroup>
+          <RevealItem className="flex flex-col items-center gap-1.5 sm:flex-row sm:gap-4">
             <Button
               variant="brand"
               icon={
@@ -42,9 +70,9 @@ export default function Hero() {
               Start 14 day Trial
             </Button>
             <Button variant="ghost">Explore the System</Button>
-          </div>
+          </RevealItem>
           <div className="flex w-full max-w-225 flex-col gap-2">
-            <div
+            <RevealItem
               style={{
                 background:
                   "linear-gradient(276deg, rgba(139, 173, 36, 0.20) 24.99%, rgba(194, 237, 63, 0.20) 93.69%)",
@@ -128,9 +156,9 @@ export default function Hero() {
                   Saved prompts
                 </Button>
               </div>
-            </div>
-            <div className="bg-brand-light border-background/10 grid grid-cols-1 gap-2 rounded-[0.875rem] border p-2 backdrop-blur-[14px] md:grid-cols-3">
-              <div
+            </RevealItem>
+            <RevealGroup className="bg-brand-light border-background/10 grid grid-cols-1 gap-2 rounded-[0.875rem] border p-2 backdrop-blur-[14px] md:grid-cols-3">
+              <RevealItem
                 style={{
                   background:
                     "linear-gradient(204deg, rgba(255, 255, 255, 0.20) 12.12%, rgba(194, 237, 63, 0.20) 47.18%, rgba(194, 237, 63, 0.20) 82.04%)",
@@ -144,8 +172,8 @@ export default function Hero() {
                     Data streams optimize flow, reducing friction.
                   </div>
                 </div>
-              </div>
-              <div
+              </RevealItem>
+              <RevealItem
                 style={{
                   background:
                     "linear-gradient(204deg, rgba(255, 255, 255, 0.20) 12.12%, rgba(194, 237, 63, 0.20) 47.18%, rgba(194, 237, 63, 0.20) 82.04%)",
@@ -159,8 +187,8 @@ export default function Hero() {
                     Data streams optimize flow, reducing friction.
                   </div>
                 </div>
-              </div>
-              <div
+              </RevealItem>
+              <RevealItem
                 style={{
                   background:
                     "linear-gradient(204deg, rgba(255, 255, 255, 0.20) 12.12%, rgba(194, 237, 63, 0.20) 47.18%, rgba(194, 237, 63, 0.20) 82.04%)",
@@ -174,8 +202,8 @@ export default function Hero() {
                     Data streams optimize flow, reducing friction.
                   </div>
                 </div>
-              </div>
-            </div>
+              </RevealItem>
+            </RevealGroup>
           </div>
         </div>
       </div>

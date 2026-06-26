@@ -23,7 +23,12 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
     gsap.ticker.add(update);
     gsap.ticker.lagSmoothing(0);
 
+    const refreshFrame = requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+    });
+
     return () => {
+      cancelAnimationFrame(refreshFrame);
       gsap.ticker.remove(update);
     };
   }, []);

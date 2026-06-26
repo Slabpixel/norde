@@ -1,10 +1,12 @@
 "use client";
 
 import Badge from "@/components/badge";
+import { RevealFade, RevealGroup, RevealItem } from "@/components/scroll-reveal";
+import { useSectionReveal } from "@/hooks/use-section-reveal";
 import { useSmooothy } from "@/hooks/use-smooothy";
-import { ParallaxSpeedSlider } from "@/lib/parallax-speed-slider";
+import { AutoScrollParallaxSlider } from "@/lib/auto-scroll-parallax-slider";
 import Image from "next/image";
-import { useMemo } from "react";
+import { useRef } from "react";
 
 const TESTIMONIALS = [
   {
@@ -42,25 +44,28 @@ const TESTIMONIALS = [
 ] as const;
 
 export default function Testimonial() {
-  const sliderConfig = useMemo(
-    () => ({
-      infinite: true,
-      snap: true,
-    }),
-    [],
-  );
+  const sectionRef = useRef<HTMLElement>(null);
+  const { ref } = useSmooothy({}, AutoScrollParallaxSlider);
 
-  const { ref } = useSmooothy(sliderConfig, ParallaxSpeedSlider);
+  useSectionReveal(sectionRef);
 
   return (
-    <section className="w-full overflow-hidden bg-white pt-30 pb-15">
+    <section
+      ref={sectionRef}
+      className="w-full overflow-hidden bg-white pt-30 pb-15"
+    >
       <div className="max-w-8xl mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
-        <div className="mx-auto flex max-w-141 flex-col items-center gap-2 text-center">
-          <Badge text="Testimonials" />
-          <h2 className="from-brand-darker/10 to-brand-darker bg-linear-to-t bg-clip-text text-5xl leading-[1.2] text-transparent">
+        <RevealGroup className="mx-auto flex max-w-141 flex-col items-center gap-2 text-center">
+          <RevealItem>
+            <Badge text="Testimonials" />
+          </RevealItem>
+          <RevealFade
+            as="h2"
+            className="from-brand-darker/10 to-brand-darker bg-linear-to-t bg-clip-text text-5xl leading-[1.2] text-transparent"
+          >
             Sustainable Pricing That Grows With You
-          </h2>
-        </div>
+          </RevealFade>
+        </RevealGroup>
       </div>
 
       <div
@@ -75,7 +80,7 @@ export default function Testimonial() {
             <div data-p className="h-full w-full">
               <article className="flex h-full w-full flex-col justify-between rounded-2xl border border-black/5 p-6">
                 <div className="flex-1">
-                  <p className="text-brand text-5xl leading-none">&ldquo;</p>
+                  <Image src="/quote.svg" alt="" width={32} height={40} />
                   <p className="mt-6 text-2xl leading-[1.2]">{item.quote}</p>
                 </div>
                 <div className="mt-8 flex shrink-0 items-center justify-between border-t border-black/5 pt-6">

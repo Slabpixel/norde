@@ -1,7 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import Badge from "./badge";
 import Button from "./button";
+import { RevealFade, RevealGroup, RevealItem, RevealSplit } from "./scroll-reveal";
+import { useParallax } from "@/hooks/use-parallax";
+import { useSectionReveal } from "@/hooks/use-section-reveal";
+import { useRef } from "react";
 
 const FOOTER_LINKS = [
   {
@@ -34,26 +40,46 @@ const SOCIAL_LINKS = [
 ] as const;
 
 export default function Footer() {
+  const footerRef = useRef<HTMLElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
+
+  useParallax(bgRef, {
+    triggerRef: footerRef,
+    yPercent: 32,
+  });
+
+  useSectionReveal(footerRef);
+
   return (
-    <footer className="bg-foreground text-background relative overflow-hidden">
-      <div className="absolute inset-0">
-        <Image src="/footer.png" alt="" fill className="object-cover" />
+    <footer
+      ref={footerRef}
+      className="bg-foreground text-background relative overflow-hidden"
+    >
+      <div className="absolute inset-0 overflow-hidden">
+        <div ref={bgRef} className="absolute top-[-12%] h-[115%] w-full">
+          <Image src="/footer.png" alt="" fill className="object-cover" />
+        </div>
       </div>
 
       <div className="bg-background pointer-events-none absolute -top-25 -left-20 h-46 w-[calc(100%+10rem)] blur-2xl" />
 
       <div className="max-w-8xl relative mx-auto px-4 pt-38 sm:px-6 md:px-8 md:pt-68 lg:px-10">
-        <div className="mx-auto flex max-w-97 flex-col items-center gap-8 text-center md:max-w-232 md:gap-10">
-          <Badge text="Get Started Now!" variant="dark" />
-          <h2 className="w-full bg-linear-[71deg,rgba(255,255,255,0)_-22.139%,#FFF_59.981%] bg-clip-text text-[2rem] leading-[1.1] text-transparent md:text-[min(6vw,4rem)]">
+        <RevealGroup className="mx-auto flex max-w-97 flex-col items-center gap-8 text-center md:max-w-232 md:gap-10">
+          <RevealItem>
+            <Badge text="Get Started Now!" variant="dark" />
+          </RevealItem>
+          <RevealFade
+            as="h2"
+            className="w-full bg-linear-[71deg,rgba(255,255,255,0)_-22.139%,#FFF_59.981%] bg-clip-text text-[2rem] leading-[1.1] text-transparent md:text-[min(6vw,4rem)]"
+          >
             Design systems that adapt and evolve responsibly.
-          </h2>
-          <p className="text-background/70 text-sm leading-[1.4] md:w-xl">
+          </RevealFade>
+          <RevealSplit className="text-background/70 text-sm leading-[1.4] md:w-xl">
             Rethink intelligence as a balanced system that filters, learns, and
             acts. Reduce load, extend longevity, and create technology in
             harmony with its environment.
-          </p>
-          <div className="flex w-full flex-col items-center gap-1.5 sm:flex-row sm:justify-center sm:gap-4">
+          </RevealSplit>
+          <RevealItem className="flex w-full flex-col items-center gap-1.5 sm:flex-row sm:justify-center sm:gap-4">
             <Button
               variant="brand"
               icon={
@@ -63,11 +89,11 @@ export default function Footer() {
               Start 14 day Trial
             </Button>
             <Button variant="ghost">Explore the System</Button>
-          </div>
-        </div>
+          </RevealItem>
+        </RevealGroup>
 
         <div className="mt-15 flex flex-col gap-15 md:mt-32 md:flex-row md:items-start md:justify-between">
-          <div className="flex w-full flex-col gap-6 md:w-77">
+          <RevealItem className="flex w-full flex-col gap-6 md:w-77">
             <Link href="/" className="inline-flex items-center gap-3">
               <Image src="/logo.svg" alt="Norde" width={104} height={28} />
             </Link>
@@ -75,11 +101,11 @@ export default function Footer() {
               Adaptive systems enhance efficiency, adjusting to changes and
               ensuring performance. They learn through feedback.
             </p>
-          </div>
+          </RevealItem>
 
           <div className="flex flex-wrap gap-x-26 gap-y-15 text-base md:gap-25">
             {FOOTER_LINKS.map((group) => (
-              <div key={group.id} className="min-w-27 space-y-6">
+              <RevealItem key={group.id} className="min-w-27 space-y-6">
                 <p className="text-background/70">{group.title}</p>
                 {group.links.map((link) => (
                   <Link
@@ -90,7 +116,7 @@ export default function Footer() {
                     {link}
                   </Link>
                 ))}
-              </div>
+              </RevealItem>
             ))}
           </div>
         </div>
