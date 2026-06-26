@@ -28,7 +28,7 @@ export default function About() {
                 alt=""
                 width={66}
                 height={69}
-                className="h-8 w-auto transition-transform duration-300 hover:-rotate-12 md:h-[2.15rem]"
+                className="h-8 w-auto transition-transform duration-300 hover:-rotate-12 md:h-17"
               />
             </span>{" "}
             AI platform focused on efficiency, sustainability{" "}
@@ -38,7 +38,7 @@ export default function About() {
                 alt=""
                 width={66}
                 height={69}
-                className="h-8 w-auto transition-transform duration-300 hover:rotate-12 md:h-[2.15rem]"
+                className="h-8 w-auto transition-transform duration-300 hover:rotate-12 md:h-17"
               />
             </span>{" "}
             and adaptive systems.
